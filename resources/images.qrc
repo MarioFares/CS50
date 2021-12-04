@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/add_book_icon.png</file>
+        <file>icons/add_books_icon.png</file>
+        <file>icons/add_collection_icon.png</file>
+        <file>icons/add_folder_icon.png</file>
+        <file>icons/add_new_icon.png</file>
+        <file>icons/add_user_icon.png</file>
+        <file>icons/arrow.png</file>
+        <file>icons/books_icon.png</file>
+        <file>icons/clean_icon.png</file>
+        <file>icons/clear_icon.png</file>
+        <file>icons/clear_search_white_icon.png</file>
+        <file>icons/database_icon.png</file>
+        <file>icons/exit_fullscreen.png</file>
+        <file>icons/feedback_icon.png</file>
+        <file>icons/fullscreen_icon.png</file>
+        <file>icons/github_icon.png</file>
+        <file>icons/gmail_icon.png</file>
+        <file>icons/icon.ico</file>
+        <file>icons/info_icon.png</file>
+        <file>icons/link_icon.png</file>
+        <file>icons/minimize_icon.png</file>
+        <file>icons/puzzle_icon.png</file>
+        <file>icons/reset_database_icon.png</file>
+        <file>icons/save_icon.png</file>
+        <file>icons/search_icon.png</file>
+        <file>icons/searchbar_icon.png</file>
+        <file>icons/settings_icon.png</file>
+        <file>icons/sort_icon.png</file>
+        <file>icons/tags_icon.png</file>
+        <file>icons/up-arrow.png</file>
+        <file>icons/upload_icon.png</file>
+    </qresource>
+</RCC>
