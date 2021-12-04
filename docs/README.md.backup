@@ -78,7 +78,7 @@ The IDE that we will be using the Qt Creator IDE. Once you complete the above in
 
 ### Compiled Output<a name="output"></a>
 - Find the compiled application in a generated directory found in the parent directory of the implementation directory (i.e. go to the parent directory of the directory containing the .pro file)
-- Go to the `release` directory
+- Go to the `realese` directory
 - Executable file should be there
 
 
