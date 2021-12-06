@@ -44,12 +44,12 @@ Project Details<a name="details"></a>
 - Architecture: x64
 
 Notes:<a name="notes"></a>
-- There are no third-party libraries that the user needs to install. The project is setup in a way such that if you follow the instructions and choose the right options the Qt Installer, you can immediately compile the project with no hassles.
+- There are no third-party libraries that the user needs to install. The project is set up in a way such that if you follow the instructions and choose the right options in the Qt Installer, you can immediately compile the project with no hassles.
 
 ## Setup Environment<a name="setup"></a>
 
 ### Qt Installer<a name="install"></a>
-We must first setup our dev environment. Please follow the steps below:
+We must first set up our dev environment. Please follow the steps below:
 1. Go to [Qt Online Installer Page](https://www.qt.io/download-open-source?hsCtaTracking=9f6a2170-a938-42df-a8e2-a9f0b1d6cdce%7C6cb0de4f-9bb5-4778-ab02-bfb62735f3e5)
 2. Scroll down until you find `Download the Qt Online Installer`
 3. Click Download
@@ -58,7 +58,7 @@ We must first setup our dev environment. Please follow the steps below:
 	2. Agree to the terms and conditions
 	3. Disable sending statistics
 	4. Choose an installation folder
-	5. Choose `Custon Installation` 
+	5. Choose `Custom Installation` 
 	6. In `Qt` > `Qt 6.1.3` select the following options:
 		1. `MinGW 8.1.0 64-bit`
 		2. `Qt5 Compatibility Module`
@@ -68,15 +68,15 @@ We must first setup our dev environment. Please follow the steps below:
 		
 
 ### Setup IDE & Compilation <a name="compile"></a>
-The IDE that we will be using the Qt Creator IDE. Once you complete the above installation steps, you will now have the Qt Creator IDE on your desktop.
+The IDE that we will be using is the Qt Creator IDE. Once you complete the above installation steps, you will now have the Qt Creator IDE on your desktop.
 1. Launch Qt Creator
-2. Have implementation folder ready
+2. Have the implementation folder ready
 3. In Qt Creator, select `Projects` on the upper left corner
 4. Click on Open
-5. Proceed to find the .pro file in the implementation folder
-6. When prompted to configure project, select the kit displayed. (there should only be one)
-6. Once all is setup, you can now click Run (choose release instead of debug) or Build on the bottom left of the IDE.
-7. The applicaiton should compile with no problem and run itself.
+5. Proceed to find the `.pro` file in the implementation folder
+6. When prompted to configure the project, select the kit displayed. (there should only be one)
+6. Once all is set up, you can now click Run (choose release instead of debug) or Build on the bottom left of the IDE.
+7. The application should compile with no problem and run itself.
 
 
 ### Compiled Output<a name="output"></a>
@@ -91,7 +91,7 @@ Please find descriptions for the following in the implemenation directory:
 - `forms`: Contains .ui files for GUI
 - `headers`: contains .h header files
 - `resources`: contains icons and stylesheets
-- `source`: contains .cpp files with code
+- `source`: contains .cpp source files
 - `EbookAccess.pro`: specific to the IDE
 
 ## Application Manual<a name="manual"></a>
@@ -108,17 +108,17 @@ The right button mentioned above will help in adding multiple files recursively.
 
 If you check the recursive checkbox, then the algorithm will dig into every subdirectory in the given directory and retrieve all files. Please note depending on the number of files, the function could be slow.
 
-Click `add` and follow instructions. Once the progressbar hits 100%, you are free to close the dialog box.
+Click `add` and follow the instructions. Once the progress bar hits 100%, you are free to close the dialog box.
 
 ### Searching your ebooks<a name="search"></a>
 #### Titles<a name="titles"></a>
-As you see on the right side of the interface, there is a searchbar, which automatically updates titles as you type. The searchvar will return the names of the ebooks that contain whatever you typed into the bar. You can also clear and sort your selections alpabetically.
+As you see on the right side of the interface, there is a search bar, which automatically updates titles as you type. The search bar will return the names of the ebooks that contain whatever you typed into the bar. You can also clear and sort your selections alphabetically.
 
 #### Criteria<a name="criteria"></a>
 You can search your ebooks using the following criteria:
 - `Folder`: This is simply the parent directory in which files are located in
 - `Author`: You must set an ebook's author manually
-- `Genre`: You must set a ebook's genre manually
+- `Genre`: You must set an ebook's genre manually
 - `Tags`: You can input tags that are associated with files
 - `Extensions`: you can search ebooks based on their extensions (ex: '.pdf')
 - `Size`: You can specify the size range you are searching for. You can also choose the unit (KB, MB, GB)
@@ -127,7 +127,7 @@ You can search your ebooks using the following criteria:
 #### Saving a search<a name="save"></a>
 You can save all the criteria you inputted by clicking on the save button.
 
-Then, you can select a search from the `Search` combobox and press the load button.
+Then, you can select a search from the `Search` combo box and press the load button.
 
 #### Extended Selection Search<a name="ext"></a>
 As you see, there is a small button next to every search criteria. This should be the preferred method to choose for example multiple folders or extensions.
@@ -145,7 +145,7 @@ Please note the application uses the `|` character as its universal separator. T
 Once you click on an ebook displayed in the List Widget (the frame in the top right), its metadata will automatically be shown in the Details Frame (the bottom right frame).
 
 
-From there, you can change the any metadata you want except the `extension` and `size`. 
+From there, you can change any metadata you want except the `extension` and `size`. 
 
 Input your author, genre, and tags for a specific ebook and press on `Update`. If you messed around with the data but did NOT press `Update`, you can use `Restore`.
 ### Other Functions<a name="other"></a>
