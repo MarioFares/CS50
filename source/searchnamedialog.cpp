@@ -24,7 +24,7 @@ void searchNameDialog::on_buttonCancel_clicked()
 void searchNameDialog::on_buttonOk_clicked()
 {
     searchName = ui->lineEdit->text();
-    if(searchName.isEmpty())
+    if (searchName.isEmpty())
     {
         common::showMsgBox("Name Error!", "Name cannot be empty.", ":/styles/style.qss", QMessageBox::Warning, ":/icons/books_icon.png");
     }

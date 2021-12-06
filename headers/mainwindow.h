@@ -1,11 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QFile>
-#include <QList>
-#include <QPointer>
+#include <QComboBox>
 #include <QMainWindow>
-#include <QApplication>
 #include <QListWidgetItem>
 #include <QSystemTrayIcon>
 
@@ -22,6 +19,8 @@ public:
     ~MainWindow();
 
 private slots:
+    void refreshComboBox(QComboBox *comboBox);
+
     void refreshFolders();
 
     void refreshAuthors();
@@ -51,6 +50,8 @@ private slots:
     void on_buttonSortSearch_clicked();
 
     void on_actionResetEbooks_triggered();
+
+    void changeWidgetVisibility(QWidget *widget, QAction *action);
 
     void on_actionHideSearchBar_triggered();
 
@@ -88,6 +89,8 @@ private slots:
 
     void on_actionHideLeftFrame_triggered();
 
+    void extSelectionSetup(const QString &title, const QString &prompt, QWidget *widget);
+
     void on_buttonExtensions_clicked();
 
     void on_buttonFolder_clicked();
@@ -114,5 +117,6 @@ private:
     Ui::MainWindow *ui;
     Qt::SortOrder SORT;
     QHash<QString, quint32> sizeConvFactors;
+    QHash<QString, QString> sizeUnits;
 };
 #endif // MAINWINDOW_H

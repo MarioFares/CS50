@@ -9,7 +9,6 @@ yesNoDialog::yesNoDialog(QWidget *parent,  QString windowTitle, QString title , 
     setWindowTitle(windowTitle);
     ui->labelTitle->setText(title);
     ui->labelPrompt->setText(prompt);
-
     result = false;
 }
 

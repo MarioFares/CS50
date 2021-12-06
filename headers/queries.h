@@ -1,11 +1,11 @@
 #ifndef QUERIES_H
 #define QUERIES_H
 
-#include <qsqldatabase.h>
-#include <qsqlquery.h>
+#include <QSqlDatabase>
+#include <QSqlQuery>
 
 /*
- * All page must be of type quint32 = uint
+ * All pages must be of type quint32 = uint
  * All sizes must be of type quint64 = unsigned long long
  */
 

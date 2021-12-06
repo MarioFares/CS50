@@ -2,6 +2,7 @@
 <hr>
 
 ## Table of Contents
+- [Demo](#demo)
 - [Some Specifications](#specs)
 	+ [Details](#details)
 	+ [Notes](#notes)
@@ -27,6 +28,8 @@
 		* [Resetting Data](#reset)
 		* [Shortcuts](#shortcuts)
 
+## Demo <a name="demo"></a>
+Please watch my project [demo](https://www.youtube.com/watch?v=XBMX4xLqcjA).
 
 ## Some Specifications <a name="specs"></a>
 This project is mainly a Windows Desktop application that uses the following technologies:

@@ -1,4 +1,4 @@
-QT += core gui sql printsupport
+QT += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -61,12 +61,8 @@ DISTFILES += \
     resources/icons/clear_search_white_icon.png \
     resources/icons/database_icon.png \
     resources/icons/exit_fullscreen.png \
-    resources/icons/feedback_icon.png \
     resources/icons/fullscreen_icon.png \
-    resources/icons/github_icon.png \
-    resources/icons/gmail_icon.png \
     resources/icons/icon.ico \
-    resources/icons/info_icon.png \
     resources/icons/link_icon.png \
     resources/icons/minimize_icon.png \
     resources/icons/puzzle_icon.png \
@@ -74,7 +70,6 @@ DISTFILES += \
     resources/icons/save_icon.png \
     resources/icons/search_icon.png \
     resources/icons/searchbar_icon.png \
-    resources/icons/settings_icon.png \
     resources/icons/sort_icon.png \
     resources/icons/tags_icon.png \
     resources/icons/up-arrow.png \

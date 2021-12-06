@@ -2,6 +2,7 @@
 <hr>
 
 ## Table of Contents
+- Tutorial
 - [Some Specifications](#specs)
 	+ [Details](#details)
 	+ [Notes](#notes)
@@ -27,6 +28,8 @@
 		* [Resetting Data](#reset)
 		* [Shortcuts](#shortcuts)
 
+## Tutorial
+Please watch my project [demo](https://www.youtube.com/watch?v=XBMX4xLqcjA)
 
 ## Some Specifications <a name="specs"></a>
 This project is mainly a Windows Desktop application that uses the following technologies:
@@ -78,7 +81,7 @@ The IDE that we will be using the Qt Creator IDE. Once you complete the above in
 
 ### Compiled Output<a name="output"></a>
 - Find the compiled application in a generated directory found in the parent directory of the implementation directory (i.e. go to the parent directory of the directory containing the .pro file)
-- Go to the `realese` directory
+- Go to the `release` directory
 - Executable file should be there
 
 

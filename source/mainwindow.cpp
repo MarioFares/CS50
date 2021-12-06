@@ -22,30 +22,42 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // Setup DB
     queries::connectToDatabase();
     queries::createEbooksTable();
     queries::createSearchTable();
 
+    // Setup Conversion
     sizeConvFactors["KB"] = 1024;
     sizeConvFactors["MB"] = 1024 * 1024;
     sizeConvFactors["GB"] = 1024 * 1024 * 1024;
 
+    // Setup Size Factors to Toggle Sizes
+    sizeUnits["KB"] = "MB";
+    sizeUnits["MB"] = "GB";
+    sizeUnits["GB"] = "KB";
+
+    // Setup List Sorting
     SORT = Qt::AscendingOrder;
     ui->setupUi(this);
     ui->ebooksListWidget->setSortingEnabled(true);
 
+    // Set Search Frame Policy
     QSizePolicy retain = ui->frameSearchToolBar->sizePolicy();
     retain.setRetainSizeWhenHidden(true);
     ui->frameSearchToolBar->setSizePolicy(retain);
 
+    // Set Right-Click Menu
     ui->ebooksListWidget->setContextMenuPolicy(Qt::CustomContextMenu);
     connect(ui->ebooksListWidget, SIGNAL(customContextMenuRequested(QPoint)), this, SLOT(showContextMenu(QPoint)));
 
+    // Refresh ComboBoxes
     refreshFolders();
     refreshAuthors();
     refreshGenres();
     refreshSearches();
 
+    // Setup Tray Icon
     auto *trayIcon = new QSystemTrayIcon(this);
     trayIcon->setIcon(windowIcon());
     trayIcon->setVisible(true);
@@ -71,52 +83,39 @@ void MainWindow::trayClicked(QSystemTrayIcon::ActivationReason r)
     }
 }
 
-void MainWindow::refreshFolders()
+void MainWindow::refreshComboBox(QComboBox *comboBox)
 {
-    ui->comboBoxFolderCriteria->clear();
-    ui->comboBoxFolderCriteria->addItem("");
-    queries::selectFoldersQuery();
+    comboBox->clear();
+    comboBox->addItem("");
     while(queries::query.next())
     {
-        ui->comboBoxFolderCriteria->addItem(queries::query.value(0).toString());
+        comboBox->addItem(queries::query.value(0).toString());
     }
-    ui->comboBoxFolderCriteria->model()->sort(0, Qt::AscendingOrder);
+    comboBox->model()->sort(0, Qt::AscendingOrder);
+}
+
+void MainWindow::refreshFolders()
+{
+    queries::selectFoldersQuery();
+    refreshComboBox(ui->comboBoxFolderCriteria);
 }
 
 void MainWindow::refreshAuthors()
 {
-    ui->comboBoxAuthorCriteria->clear();
-    ui->comboBoxAuthorCriteria->addItem("");
     queries::selectAuthorsQuery();
-    while(queries::query.next())
-    {
-        ui->comboBoxAuthorCriteria->addItem(queries::query.value(0).toString());
-    }
-    ui->comboBoxAuthorCriteria->model()->sort(0, Qt::AscendingOrder);
+    refreshComboBox(ui->comboBoxAuthorCriteria);
 }
 
 void MainWindow::refreshGenres()
 {
-    ui->comboBoxGenreCriteria->clear();
-    ui->comboBoxGenreCriteria->addItem("");
     queries::selectGenreQuery();
-    while(queries::query.next())
-    {
-        ui->comboBoxGenreCriteria->addItem(queries::query.value(0).toString());
-    }
-    ui->comboBoxGenreCriteria->model()->sort(0, Qt::AscendingOrder);
+    refreshComboBox(ui->comboBoxGenreCriteria);
 }
 
 void MainWindow::refreshSearches()
 {
-    ui->comboBoxSearchLoad->clear();
-    ui->comboBoxSearchLoad->addItem("");
     queries::selectSearchesQuery();
-    while(queries::query.next())
-    {
-        ui->comboBoxSearchLoad->addItem(queries::query.value(0).toString());
-    }
-    ui->comboBoxSearchLoad->model()->sort(0, Qt::AscendingOrder);
+    refreshComboBox(ui->comboBoxSearchLoad);
 }
 
 double MainWindow::changeBookSizeUnit(double size, const QString &unit)
@@ -125,17 +124,16 @@ double MainWindow::changeBookSizeUnit(double size, const QString &unit)
     return size;
 }
 
+// Context Menu when right-clicking the list widget
 void MainWindow::showContextMenu(const QPoint &pos)
 {
     QPoint globalPos = ui->ebooksListWidget->mapToGlobal(pos);
 
     QMenu menu;
     menu.setStyleSheet(common::openSheet(":/styles/style.qss"));
-
     menu.addAction("Open Ebook", this, [this]{on_ebooksListWidget_itemActivated(ui->ebooksListWidget->currentItem());});
     menu.addAction("Show in Folder", this, SLOT(openFolder()));
     menu.addAction("Delete Ebook", this, SLOT(deleteListItem()));
-
     if (!ui->ebooksListWidget->selectedItems().isEmpty())
     {
         menu.exec(globalPos);
@@ -144,13 +142,12 @@ void MainWindow::showContextMenu(const QPoint &pos)
 
 void MainWindow::deleteListItem()
 {
-    QString itemName = ui->ebooksListWidget->currentItem()->text();
     QListWidgetItem *currentItem = ui->ebooksListWidget->currentItem();
+    QString itemName = currentItem->text();
 
     yesNoDialog dialog(this, "Delete File", "Delete File", "Do you wish to delete the file on your hard drive as well?");
     common::openDialog(&dialog, ":/styles/style.qss");
     bool result = dialog.getResult();
-
     if (result)
     {
         queries::selectPathBasedonName(itemName);
@@ -174,6 +171,7 @@ void MainWindow::openFolder()
     QString filePath = queries::query.value(0).toString();
     QFileInfo file(filePath);
 
+    // Type 1 is Windows
     if (QOperatingSystemVersion::current().type() == 1)
     {
         QStringList args;
@@ -214,6 +212,7 @@ void MainWindow::on_buttonSearchString_clicked()
 
 void MainWindow::on_buttonClearCriteria_clicked()
 {
+    // Values below are the default values
     ui->spinBoxFromSizeCriteria->setValue(0);
     ui->spinBoxFromPagesCriteria->setValue(0);
     ui->spinBoxToSizeCriteria->setValue(1024);
@@ -256,10 +255,19 @@ void MainWindow::on_actionResetEbooks_triggered()
     ui->statusBar->showMessage("All ebooks have been deleted.");
 }
 
+void MainWindow::changeWidgetVisibility(QWidget *widget, QAction *action)
+{
+    bool isHidden = widget->isHidden();
+    widget->setHidden(!isHidden);
+
+    QString actionText = action->text();
+    actionText.replace(isHidden ? "Show" : "Hide", isHidden ? "Hide" : "Show", Qt::CaseInsensitive);
+    action->setText(actionText);
+}
+
 void MainWindow::on_actionHideSearchBar_triggered()
 {
-    ui->frameSearchToolBar->setHidden(!ui->frameSearchToolBar->isHidden());
-    ui->actionHideSearchBar->setText(ui->frameSearchToolBar->isHidden() ? "Show Search Bar" : "Hide Search Bar");
+    changeWidgetVisibility(ui->frameSearchToolBar, ui->actionHideSearchBar);
 }
 
 void MainWindow::on_actionHideDetailsSection_triggered()
@@ -267,25 +275,21 @@ void MainWindow::on_actionHideDetailsSection_triggered()
     ui->frameDetails->setHidden(!ui->frameDetails->isHidden());
     ui->actionHideDetailsSection->setText(ui->frameDetails->isHidden() ? "Show Details Section" : "Hide Details Section");
     ui->frameMainRight->setHidden(ui->ebooksListWidget->isHidden() && ui->frameDetails->isHidden());
-
 }
 
 void MainWindow::on_actionHideRightFrame_triggered()
 {
-    ui->frameMainRight->setHidden(!ui->frameMainRight->isHidden());
-    ui->actionHideRightFrame->setText(ui->frameMainRight->isHidden() ? "Show Right Frame" : "Hide Right Frame");
+    changeWidgetVisibility(ui->frameMainRight, ui->actionHideRightFrame);
 }
 
 void MainWindow::on_actionHideUtilities_triggered()
 {
-    ui->frameBottomButtons->setHidden(!ui->frameBottomButtons->isHidden());
-    ui->actionHideUtilities->setText(ui->frameBottomButtons->isHidden() ? "Show Utilities" : "Hide Utilities");
+    changeWidgetVisibility(ui->frameBottomButtons, ui->actionHideUtilities);
 }
 
 void MainWindow::on_actionHideLeftFrame_triggered()
 {
-    ui->frameMainLeft->setHidden(!ui->frameMainLeft->isHidden());
-    ui->actionHideLeftFrame->setText(ui->frameMainLeft->isHidden() ? "Show Left Frame" : "Hide Left Frame");
+    changeWidgetVisibility(ui->frameMainLeft, ui->actionHideLeftFrame);
 }
 
 void MainWindow::on_buttonAddBook_clicked()
@@ -337,20 +341,21 @@ void MainWindow::on_buttonSearchCriteria_clicked()
     ui->statusBar->showMessage("Number of ebooks: " + QString::number(count));
 }
 
+// Display Metadata for clicked ebook
 void MainWindow::on_ebooksListWidget_itemClicked(QListWidgetItem *item)
 {
     QString fileName = item->text();
     queries::selectAllBasedonName(fileName);
     queries::query.next();
-    QString author = queries::query.value(1).toString();
+    QString author = queries::query.value("author").toString();
     author = (author == "N/A" ? "" : author);
-    QString genre = queries::query.value(2).toString();
+    QString genre = queries::query.value("genre").toString();
     genre = (genre == "N/A" ? "" : genre);
-    QString ext = queries::query.value(4).toString();
-    QString pages = queries::query.value(5).toString();
-    double size = changeBookSizeUnit(queries::query.value(6).toDouble(), ui->buttonSizeUnit->text());
-    QString folder = queries::query.value(7).toString();
-    QString tags = queries::query.value(8).toString();
+    QString ext = queries::query.value("ext").toString();
+    QString pages = queries::query.value("pages").toString();
+    double size = changeBookSizeUnit(queries::query.value("size").toDouble(), ui->buttonSizeUnit->text());
+    QString folder = queries::query.value("folder").toString();
+    QString tags = queries::query.value("tags").toString();
 
     ui->textDetailsName->setText(fileName);
     ui->textDetailsAuthor->setText(author);
@@ -442,16 +447,16 @@ void MainWindow::on_buttonSearchLoad_clicked()
         QString searchName = ui->comboBoxSearchLoad->currentText();
         queries::selectSearchCriteriaQuery(searchName);
         queries::query.next();
-        ui->comboBoxFolderCriteria->setCurrentText(queries::query.value(1).toString());
-        ui->comboBoxAuthorCriteria->setCurrentText(queries::query.value(2).toString());
-        ui->comboBoxGenreCriteria->setCurrentText(queries::query.value(3).toString());
-        ui->textTagsCriteria->setText(queries::query.value(4).toString());
-        ui->textExts->setText(queries::query.value(5).toString());
-        ui->spinBoxFromSizeCriteria->setValue(queries::query.value(6).toUInt());
-        ui->spinBoxToSizeCriteria->setValue(queries::query.value(7).toUInt());
-        ui->buttonSizeCriteria->setText(queries::query.value(8).toString());
-        ui->spinBoxFromPagesCriteria->setValue(queries::query.value(9).toUInt());
-        ui->spinBoxToPagesCriteria->setValue(queries::query.value(10).toUInt());
+        ui->comboBoxFolderCriteria->setCurrentText(queries::query.value("folder").toString());
+        ui->comboBoxAuthorCriteria->setCurrentText(queries::query.value("author").toString());
+        ui->comboBoxGenreCriteria->setCurrentText(queries::query.value("genre").toString());
+        ui->textTagsCriteria->setText(queries::query.value("tags").toString());
+        ui->textExts->setText(queries::query.value("ext").toString());
+        ui->spinBoxFromSizeCriteria->setValue(queries::query.value("size_from").toUInt());
+        ui->spinBoxToSizeCriteria->setValue(queries::query.value("size_to").toUInt());
+        ui->buttonSizeCriteria->setText(queries::query.value("size_in").toString());
+        ui->spinBoxFromPagesCriteria->setValue(queries::query.value("pages_from").toUInt());
+        ui->spinBoxToPagesCriteria->setValue(queries::query.value("pages_to").toUInt());
 
         ui->statusBar->showMessage("Search loaded.");
     }
@@ -489,88 +494,60 @@ void MainWindow::on_ebooksListWidget_itemActivated(QListWidgetItem *item)
 void MainWindow::on_buttonSizeCriteria_clicked()
 {
     QString currentText = ui->buttonSizeCriteria->text();
-    if (currentText == "KB")
+    ui->buttonSizeCriteria->setText(sizeUnits[currentText]);
+}
+
+void MainWindow::extSelectionSetup(const QString &title, const QString &prompt, QWidget *widget)
+{
+    QVector<QString> results;
+    while(queries::query.next())
     {
-        ui->buttonSizeCriteria->setText("MB");
+        QString value = queries::query.value(0).toString();
+        if (!results.contains(value))
+        {
+            results.push_back(value);
+        }
     }
-    else if (currentText == "MB")
-    {
-        ui->buttonSizeCriteria->setText("GB");
+    auto *dialog = new extSelectionDialog(this, results, title, prompt);
+    common::openDialog(dialog, ":/styles/style.qss");
+
+    results = dialog->getExtVector();
+    QString resultString = results.join(common::SEP);
+
+    if (QComboBox *cb = qobject_cast<QComboBox*>(widget)) {
+        cb->setCurrentText(resultString);
     }
-    else
+    else if (QLineEdit *le = qobject_cast<QLineEdit*>(widget))
     {
-        ui->buttonSizeCriteria->setText("KB");
+        le->setText(resultString);
     }
 }
 
 void MainWindow::on_buttonExtensions_clicked()
 {
     queries::selectExt();
-    QVector<QString> ext;
-    while(queries::query.next())
-    {
-        ext.push_back(queries::query.value(0).toString());
-    }
-
-    auto *dialog = new extSelectionDialog(this, ext, "Extensions", "Select Available Extensions");
-    common::openDialog(dialog, ":/styles/style.qss");
-
-    ext = dialog->getExtVector();
-    QString extString = ext.join(common::SEP);
-    ui->textExts->setText(extString);
+    extSelectionSetup("Extensions", "Select Available Extensions", ui->textExts);
 }
 
 void MainWindow::on_buttonFolder_clicked()
 {
     queries::selectFoldersQuery();
-    QVector<QString> folders;
-    while(queries::query.next())
-    {
-        folders.push_back(queries::query.value(0).toString());
-    }
-
-    auto *dialog = new extSelectionDialog(this, folders, "Folders", "Select Available Folders");
-    common::openDialog(dialog, ":/styles/style.qss");
-
-    folders = dialog->getExtVector();
-    QString folderString = folders.join(common::SEP);
-    ui->comboBoxFolderCriteria->setCurrentText(folderString);
+    extSelectionSetup("Folders", "Select Available Folders", ui->comboBoxFolderCriteria);
 }
 
 void MainWindow::on_buttonAuthor_clicked()
 {
     queries::selectAuthorsQuery();
-    QVector<QString> authors;
-    while(queries::query.next())
-    {
-        authors.push_back(queries::query.value(0).toString());
-    }
-
-    auto *dialog = new extSelectionDialog(this, authors, "Authors", "Select Available Authors");
-    common::openDialog(dialog, ":/styles/style.qss");
-
-    authors = dialog->getExtVector();
-    QString authorsString = authors.join(common::SEP);
-    ui->comboBoxAuthorCriteria->setCurrentText(authorsString);
+    extSelectionSetup("Authors", "Select Available Authors", ui->comboBoxAuthorCriteria);
 }
 
 void MainWindow::on_buttonGenre_clicked()
 {
     queries::selectGenreQuery();
-    QVector<QString> genres;
-    while(queries::query.next())
-    {
-        genres.push_back(queries::query.value(0).toString());
-    }
-
-    auto *dialog = new extSelectionDialog(this, genres, "Genres", "Select Available Genres");
-    common::openDialog(dialog, ":/styles/style.qss");
-
-    genres = dialog->getExtVector();
-    QString extString = genres.join(common::SEP);
-    ui->comboBoxGenreCriteria->setCurrentText(extString);
+    extSelectionSetup("Genres", "Select Available Genres", ui->comboBoxGenreCriteria);
 }
 
+// This cannot be abstracted away like the rest because of how tags are stored in DB
 void MainWindow::on_buttonTags_clicked()
 {
     QVector<QString> tags;
@@ -599,19 +576,7 @@ void MainWindow::on_buttonTags_clicked()
 void MainWindow::on_buttonSizeUnit_clicked()
 {
     QString currentText = ui->buttonSizeUnit->text();
-    if (currentText == "KB")
-    {
-        ui->buttonSizeUnit->setText("MB");
-    }
-    else if (currentText == "MB")
-    {
-        ui->buttonSizeUnit->setText("GB");
-    }
-    else
-    {
-        ui->buttonSizeUnit->setText("KB");
-    }
-
+    ui->buttonSizeUnit->setText(sizeUnits[currentText]);
     if (!ui->ebooksListWidget->selectedItems().isEmpty())
     {
         on_ebooksListWidget_itemClicked(ui->ebooksListWidget->currentItem());
@@ -637,6 +602,7 @@ void MainWindow::on_actionResetSearches_triggered()
 void MainWindow::on_actionResetDatabase_triggered()
 {
     on_actionResetEbooks_triggered();
+    on_actionResetSearches_triggered();
 }
 
 void MainWindow::on_actionWindowTop_triggered()

@@ -13,12 +13,8 @@
         <file>icons/clear_search_white_icon.png</file>
         <file>icons/database_icon.png</file>
         <file>icons/exit_fullscreen.png</file>
-        <file>icons/feedback_icon.png</file>
         <file>icons/fullscreen_icon.png</file>
-        <file>icons/github_icon.png</file>
-        <file>icons/gmail_icon.png</file>
         <file>icons/icon.ico</file>
-        <file>icons/info_icon.png</file>
         <file>icons/link_icon.png</file>
         <file>icons/minimize_icon.png</file>
         <file>icons/puzzle_icon.png</file>
@@ -26,7 +22,6 @@
         <file>icons/save_icon.png</file>
         <file>icons/search_icon.png</file>
         <file>icons/searchbar_icon.png</file>
-        <file>icons/settings_icon.png</file>
         <file>icons/sort_icon.png</file>
         <file>icons/tags_icon.png</file>
         <file>icons/up-arrow.png</file>

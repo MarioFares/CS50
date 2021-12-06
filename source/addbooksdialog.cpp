@@ -30,55 +30,44 @@ void addBooksDialog::on_buttonClose_clicked()
 
 void addBooksDialog::on_buttonBrowseFolders_clicked()
 {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Choose Folder"),
-                                                    "/",
-                                                    QFileDialog::ShowDirsOnly
-                                                    | QFileDialog::DontResolveSymlinks);
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Choose Folder"), "/",
+                                                    QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     ui->textFolderPath->setText(dir);
 }
 
-void addBooksDialog::insertBook(const QFileInfo &entry, const QString &tags, const QString &genre, const QString &author)
+void addBooksDialog::on_buttonAdd_clicked()
 {
-    QString name = entry.completeBaseName();
-    QString path = entry.absoluteFilePath();
-    QString ext = "." + entry.suffix();
-    QString folder = entry.dir().dirName();
-    quint64 size = entry.size();
-    quint32 pages = 0;
-    queries::insertBooksQuery(name, path, folder, ext, size, pages, tags, genre, author);
+    QString dirPath = ui->textFolderPath->text();
+    QFileInfo dir(dirPath);
+    if(dir.exists() && dir.isDir())
+    {
+        setupEntries(dirPath, ui->checkBoxRecursive->isChecked());
+    }
+    else
+    {
+        common::showMsgBox("Path Error!", "Directory path not valid!", ":/styles/style.qss", QMessageBox::Warning, ":/icons/books_icon.png");
+    }
 }
 
-QVector<QFileInfo> addBooksDialog::getEntriesVector(const QString &dir, bool recursive)
+void addBooksDialog::setupEntries(const QString &dir, bool recursive)
 {
+    // Iterate over directory and get fileInfo and extensions
+    QVector<QString> extVector;
     QVector<QFileInfo> entriesVector;
     QDirIterator iterator(dir, QDir::Files, recursive ? QDirIterator::Subdirectories : QDirIterator::NoIteratorFlags);
     while (iterator.hasNext())
     {
         QFileInfo file(iterator.next());
         entriesVector.push_back(file);
-    }
-    return entriesVector;
-}
 
-QVector<QString> addBooksDialog::getExtVector(QVector<QFileInfo> entries)
-{
-    QVector<QString> extVector;
-    for (QFileInfo &file : entries)
-    {
         QString ext = "." + file.suffix().toLower();
         if (!extVector.contains(ext))
         {
             extVector.push_back(ext);
         }
     }
-    return extVector;
-}
 
-void addBooksDialog::setupEntries(const QString &dir, bool recursive)
-{
-    QVector<QFileInfo> entriesVector = getEntriesVector(dir, recursive);
-    QVector<QString> extVector = getExtVector(entriesVector);
-
+    // Input for common tags, genres, or authors
     bulkDetailsDialog dialog;
     common::openDialog(&dialog, ":/styles/style.qss");
 
@@ -86,11 +75,11 @@ void addBooksDialog::setupEntries(const QString &dir, bool recursive)
     QString genres = dialog.genre.isEmpty() ? "N/A" : dialog.genre;
     QString authors = dialog.author.isEmpty() ? "N/A" : dialog.author;
 
+    // Let the user select desired extensions
     auto *extDialog = new extSelectionDialog(this, extVector, "Extensions", "Select Extensions");
     common::openDialog(extDialog, ":/styles/style.qss");
 
     QVector<QString> selectedExts = extDialog->getExtVector();
-
     iterateInsertEntries(entriesVector, selectedExts, tags, genres, authors);
 }
 
@@ -115,11 +104,13 @@ void addBooksDialog::iterateInsertEntries(const QVector<QFileInfo> &entriesVecto
     ui->progressBar->setValue(100);
 }
 
-void addBooksDialog::on_buttonAdd_clicked()
+void addBooksDialog::insertBook(const QFileInfo &entry, const QString &tags, const QString &genre, const QString &author)
 {
-    QString dir = ui->textFolderPath->text();
-    if(QFileInfo::exists(dir))
-    {
-        setupEntries(dir, ui->checkBoxRecursive->isChecked());
-    }
+    QString name = entry.completeBaseName();
+    QString path = entry.absoluteFilePath();
+    QString ext = "." + entry.suffix();
+    QString folder = entry.dir().dirName();
+    quint64 size = entry.size();
+    quint32 pages = 0;
+    queries::insertBooksQuery(name, path, folder, ext, size, pages, tags, genre, author);
 }

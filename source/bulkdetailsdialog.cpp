@@ -13,6 +13,7 @@ bulkDetailsDialog::~bulkDetailsDialog()
     delete ui;
 }
 
+// arg1 is either 0 or 1, reflects current check/uncheck
 void bulkDetailsDialog::on_checkBoxAuthor_stateChanged(int arg1)
 {
     ui->textAuthor->setEnabled(arg1);

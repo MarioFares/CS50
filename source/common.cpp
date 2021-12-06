@@ -44,16 +44,6 @@ void showMsgBox(const QString &title, const QString &text, const QString &styles
     box.exec();
 }
 
-void showErrorMsg(const QString &title, const QString &message, const QString &stylesheetPath)
-{
-    QErrorMessage msg;
-    msg.showMessage(message);
-    msg.setWindowTitle(title);
-    msg.setStyleSheet(common::openSheet(stylesheetPath));
-    msg.ensurePolished();
-    msg.exec();
-}
-
 void openWindow(QMainWindow *window, const QString &stylesheetPath)
 {
     window->setStyleSheet(common::openSheet(stylesheetPath));
@@ -72,7 +62,6 @@ QCompleter *dirCompleter(QWidget *parent)
     model->setRootPath("/");
     model->sort(0, Qt::DescendingOrder);
     dirCompleter->setModel(model);
-
     return dirCompleter;
 }
 

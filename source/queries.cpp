@@ -85,9 +85,8 @@ void createEbooksTable()
                                                     "size INT NOT NULL,"
                                                     "folder TEXT NOT NULL,"
                                                     "tags TEXT DEFAULT \'N/A\' NOT NULL,"
-                                                    "summary TEXT DEFAULT \'N/A\' NOT NULL,"
                                                     "time_added DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')),"
-                                                    "PRIMARY KEY (name)"
+                                                    "PRIMARY KEY (path)"
                                                     ")");
 
     query.exec("CREATE UNIQUE INDEX IF NOT EXISTS ebooks_names_index ON ebooks(name)");

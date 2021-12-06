@@ -40,13 +40,14 @@ void addBookDialog::on_buttonClear_clicked()
 void addBookDialog::on_buttonBrowse_clicked()
 {
     QString filePath = QFileDialog::getOpenFileName(this,
-                                                     tr("Open File"), "/", tr("All Files (*.*)"));
+                                                    tr("Open File"), "/", tr("All Files (*.*)"));
 
     QFileInfo file(filePath);
     ui->textName->setText(file.completeBaseName());
     ui->textExtension->setText("." + file.suffix());
     ui->textFolder->setText(file.dir().dirName());
     ui->textPath->setText(file.absoluteFilePath());
+    // Size returned in bytes
     ui->textSize->setText(QString::number(file.size()));
     ui->textPages->setText(0);
 }
@@ -63,13 +64,18 @@ void addBookDialog::on_buttonAdd_clicked()
     QString ext = ui->textExtension->text();
     QString tags = ui->textTags->text();
 
-    if(QFileInfo::exists(path))
+    QFileInfo file(path);
+    if(file.exists() && file.isFile())
     {
         queries::insertBooksQuery(name, path, folder, ext, size,
                                   pages, tags, genre, author);
         common::showMsgBox("Success!", "Ebook successfully added.",
                            ":/styles/style.qss", QMessageBox::Information,
                            ":/icons/books_icon.png");
+    }
+    else
+    {
+        common::showMsgBox("Path Error!", "File path not valid!", ":/styles/style.qss", QMessageBox::Warning, ":/icons/books_icon.png");
     }
 }
 
