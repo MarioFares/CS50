@@ -39,7 +39,7 @@ void extSelectionDialog::setExtVector()
     for (int i = 0; i < ui->listWidget->count(); i++)
     {
         QListWidgetItem *item = ui->listWidget->item(i);
-        if(item->checkState() == Qt::Checked)
+        if (item->checkState() == Qt::Checked)
         {
             outputVector.push_back(item->text());
         }

@@ -59,7 +59,7 @@ QString genTagQuery(QString tags)
 QString cleanTags(QString tags)
 {
     QString cleanString = "";
-    while(tags.endsWith(common::SEP))
+    while (tags.endsWith(common::SEP))
     {
         tags.remove(-1, 1); // remove 1 char at pos -1
     }

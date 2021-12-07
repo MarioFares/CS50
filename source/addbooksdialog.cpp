@@ -39,7 +39,7 @@ void addBooksDialog::on_buttonAdd_clicked()
 {
     QString dirPath = ui->textFolderPath->text();
     QFileInfo dir(dirPath);
-    if(dir.exists() && dir.isDir())
+    if (dir.exists() && dir.isDir())
     {
         setupEntries(dirPath, ui->checkBoxRecursive->isChecked());
     }
@@ -89,7 +89,7 @@ void addBooksDialog::iterateInsertEntries(const QVector<QFileInfo> &entriesVecto
     queries::db.transaction();
     size_t count = entriesVector.size();
     double counter = 0;
-    for(const QFileInfo &entry : entriesVector)
+    for (const QFileInfo &entry : entriesVector)
     {
         QString ext = "." + entry.suffix().toLower();
         quint32 progress = (counter / count) * 100;

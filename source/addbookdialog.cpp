@@ -65,7 +65,7 @@ void addBookDialog::on_buttonAdd_clicked()
     QString tags = ui->textTags->text();
 
     QFileInfo file(path);
-    if(file.exists() && file.isFile())
+    if (file.exists() && file.isFile())
     {
         queries::insertBooksQuery(name, path, folder, ext, size,
                                   pages, tags, genre, author);

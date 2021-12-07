@@ -77,7 +77,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::trayClicked(QSystemTrayIcon::ActivationReason r)
 {
-    if( r == QSystemTrayIcon::Trigger)
+    if (r == QSystemTrayIcon::Trigger)
     {
         this->show();
     }
@@ -87,7 +87,7 @@ void MainWindow::refreshComboBox(QComboBox *comboBox)
 {
     comboBox->clear();
     comboBox->addItem("");
-    while(queries::query.next())
+    while (queries::query.next())
     {
         comboBox->addItem(queries::query.value(0).toString());
     }
@@ -202,7 +202,7 @@ void MainWindow::on_buttonSearchString_clicked()
     QString stringToSearch = ui->textSearchBar->text();
     queries::selectNameBasedOnString(stringToSearch);
     quint32 count = 0;
-    while(queries::query.next())
+    while (queries::query.next())
     {
         ui->ebooksListWidget->addItem(queries::query.value(0).toString());
         count++;
@@ -333,7 +333,7 @@ void MainWindow::on_buttonSearchCriteria_clicked()
     QString ext = ui->textExts->text();
     queries::selectNameBasedOnCriteria(folder, genre, author, tags, ext, pagesFrom, pagesTo, sizeFrom, sizeTo);
     quint32 count = 0;
-    while(queries::query.next())
+    while (queries::query.next())
     {
         ui->ebooksListWidget->addItem(queries::query.value(0).toString());
         count++;
@@ -430,7 +430,7 @@ void MainWindow::on_buttonSaveCriteria_clicked()
 
     searchNameDialog dialog(this);
     common::openDialog(&dialog, ":/styles/style.qss");
-    if(!dialog.searchName.isEmpty())
+    if (!dialog.searchName.isEmpty())
     {
         queries::insertSearchQuery(dialog.searchName, folder, author, genre, tags, ext,
                                    sizeFrom, sizeTo, sizeIn, pagesFrom, pagesTo);
@@ -500,7 +500,7 @@ void MainWindow::on_buttonSizeCriteria_clicked()
 void MainWindow::extSelectionSetup(const QString &title, const QString &prompt, QWidget *widget)
 {
     QVector<QString> results;
-    while(queries::query.next())
+    while (queries::query.next())
     {
         QString value = queries::query.value(0).toString();
         if (!results.contains(value))
@@ -552,13 +552,13 @@ void MainWindow::on_buttonTags_clicked()
 {
     QVector<QString> tags;
     queries::selectTags();
-    while(queries::query.next())
+    while (queries::query.next())
     {
         QString tagString = queries::query.value(0).toString();
         QStringList tagList = tagString.split(common::SEP);
-        for(QString &tag : tagList)
+        for (QString &tag : tagList)
         {
-            if(!tags.contains(tag))
+            if (!tags.contains(tag))
             {
                 tags.push_back(tag);
             }
