@@ -86,7 +86,7 @@ void createEbooksTable()
                                                     "folder TEXT NOT NULL,"
                                                     "tags TEXT DEFAULT \'N/A\' NOT NULL,"
                                                     "time_added DATETIME NOT NULL DEFAULT (datetime(CURRENT_TIMESTAMP, 'localtime')),"
-                                                    "PRIMARY KEY (path)"
+                                                    "PRIMARY KEY (name)"
                                                     ")");
 
     query.exec("CREATE UNIQUE INDEX IF NOT EXISTS ebooks_names_index ON ebooks(name)");
@@ -109,7 +109,7 @@ void createSearchTable()
                                                     "PRIMARY KEY (search_name) "
                                                     ")");
 
-    query.exec("CREATE INDEX IF NOT EXISTS searches_names_index ON searches(search_name)");
+    query.exec("CREATE UNIQUE INDEX IF NOT EXISTS searches_names_index ON searches(search_name)");
 
 }
 
